@@ -3,7 +3,7 @@
 import Image from "next/image";
 import {useState,useEffect} from 'react'
 import {firestore} from "@/firebase"
-import {Box, Modal, Stack, TextField, Typography } from "@mui/material";
+import {Box, Button, Modal, Stack, TextField, Typography } from "@mui/material";
 import { collection, deleteDoc, getDocs, query, setDoc , doc } from "firebase/firestore";
 
 
@@ -12,7 +12,7 @@ export default function Home() {
 
   //constants
   const [inventory,setInventory] = useState([])
-  const [open,setOpen] = useState(true)
+  const [open,setOpen] = useState(false)
   const [itemName,setItemName] = useState([""])
 
 
@@ -84,6 +84,7 @@ export default function Home() {
     <Box width="100vw" 
         height = "100vh"
         display = "flex" 
+        flexDirection={"column"}
         justifyContent="center " 
         alignItems="center" 
         gap={3}>
@@ -110,11 +111,54 @@ export default function Home() {
             value={itemName}
             onChange={(e)=>{setItemName(e.target.value)}}
 
-            ></TextField>
+            />
+            <Button
+            variant="outlined"
+            onClick={()=>{
+              addItem(itemName)
+              setItemName('')
+              handleClose()
+            }}
+            >Add item</Button>
           </Stack>
         </Box>
       </Modal>
-      <Typography variant="h1"> inventory management </Typography>
+      <Button variant="contained" onClick={()=>{
+        handleOpen()
+      }}>
+        Add new item
+      </Button>
+      <Box border={"1px solid #000"}>
+        <Box
+        width={"800px"}
+        height={"100px"}
+        bgcolor={"ADD8E6"}
+        display={"flex"}
+        alignItems={"center"}
+        justifyContent={"center"}
+        >
+          <Typography variant="h2" color={"#333"}>
+            inventory items
+          </Typography>
+        </Box>
+      </Box>
+      <Stack width={'100px'} height={'300px'} spacing={2} overflow={'auto'}>
+        {inventory.map(({name , quantity}) => (
+            <Box 
+            key={name}
+            width={'100%'}
+            minHeight={'200px'}
+            display={'flex'}
+            alignItems={"center"}
+            justifyContent={"center"}
+            bgColor={'#f0f0f0'}
+            padding={5}
+            >
+              <Typography>{name}</Typography>
+            </Box>
+          ))}
+
+      </Stack>
       {
         inventory.forEach((item)=>{
           console.log(item)
